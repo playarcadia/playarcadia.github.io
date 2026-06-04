@@ -29,7 +29,7 @@
             display: block;
         }
 
-        /* Centered Auth Screen */
+        /* Centered Auth Screen Layout */
         #auth-screen {
             display: none; 
             flex-direction: column;
@@ -49,6 +49,22 @@
             padding: 30px;
             background: white;
             width: 360px;
+        }
+
+        .auth-toggle-link {
+            display: inline-block;
+            margin-top: 10px;
+            background: none;
+            border: none;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: normal;
+            padding: 0;
+        }
+        .auth-toggle-link:hover {
+            background: none;
+            color: black;
         }
 
         /* Inputs and Buttons */
@@ -86,10 +102,11 @@
             margin-bottom: 20px;
         }
 
+        /* Wide text-based logo style with no border outline */
         .logo {
-            width: 50px;
-            height: 50px;
-            border: 2px dashed black;
+            width: 250px;
+            height: auto;
+            display: block;
             object-fit: contain;
         }
 
@@ -252,13 +269,30 @@
 <body>
 
     <div id="auth-screen" class="screen active">
-        <div class="auth-box">
-            <h2>Sign Up / Register</h2>
+        
+        <div class="auth-box" id="login-panel">
+            <h2>Log In</h2>
             <br>
-            <div id="auth-error" class="error-message">Error container</div>
+            <div id="login-error" class="error-message">Error container</div>
 
             <label>Username:</label>
-            <input type="text" id="auth-username" placeholder="Enter Username">
+            <input type="text" id="login-username" placeholder="Enter Username">
+            
+            <label>Password:</label>
+            <input type="password" id="login-password" placeholder="Enter Password">
+            
+            <button onclick="loginUser()">Sign In</button>
+            <br>
+            <button class="auth-toggle-link" onclick="toggleAuthView('register')">Don't have an account? Register here</button>
+        </div>
+
+        <div class="auth-box" id="register-panel" style="display: none;">
+            <h2>Sign Up / Register</h2>
+            <br>
+            <div id="register-error" class="error-message">Error container</div>
+
+            <label>Username:</label>
+            <input type="text" id="auth-username" placeholder="Enter Username (e.g. Mauro)">
             
             <label>Email:</label>
             <input type="email" id="auth-email" placeholder="Enter Email">
@@ -267,12 +301,15 @@
             <input type="password" id="auth-password" placeholder="Enter Password">
             
             <button onclick="signUpUser()">Register Account</button>
+            <br>
+            <button class="auth-toggle-link" onclick="toggleAuthView('login')">Already have an account? Log in here</button>
         </div>
+
     </div>
 
     <div id="home-screen" class="screen">
         <header>
-            <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 20px;">
                 <img src="logo.png" alt="logo.png" class="logo">
                 <div>
                     <span id="welcome-user" style="font-weight: bold; font-size: 20px;">Username</span>
@@ -353,7 +390,7 @@
                                 <h1 id="profile-username-display">Username</h1>
                                 <p id="profile-bio-display" style="border: 1px dashed black; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
                                 
-                                <button id="unfriend-btn" style="display: none; border: 2px solid red; color: red;" onclick="unfriendCurrentProfile()">Unfriend</button>
+                                <button id="unfriend-btn" style="display: none; border: 2px solid red; color: red;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
                             </div>
                         </div>
                         
@@ -437,12 +474,12 @@
         let equippedItems = { hat: "", shirt: "", pants: "" };
         let currentlyViewingProfile = ""; 
 
-        // Existing Registered Accounts (For Username Taken & Unique Email checks)
+        // Existing Simulated Registered Accounts
         let globalAccountsDatabase = {
-            "mauro": { email: "mauro@mail.com" },
-            "friend1": { email: "friend1@mail.com" },
-            "noobmaster": { email: "noob@mail.com" },
-            "guest404": { email: "ghost@mail.com" }
+            "mauro": { email: "mauro@mail.com", password: "123" },
+            "friend1": { email: "friend1@mail.com", password: "123" },
+            "noobmaster": { email: "noob@mail.com", password: "123" },
+            "guest404": { email: "ghost@mail.com", password: "123" }
         };
 
         // Database holding profile configurations for your friends display values
@@ -455,11 +492,53 @@
         // Current active friends array list
         let activeFriendsList = ["Friend1"];
 
+        // Switches between Login form and Sign Up form views
+        function toggleAuthView(targetPanel) {
+            document.getElementById('login-error').style.display = "none";
+            document.getElementById('register-error').style.display = "none";
+
+            if (targetPanel === 'register') {
+                document.getElementById('login-panel').style.display = "none";
+                document.getElementById('register-panel').style.display = "block";
+            } else {
+                document.getElementById('register-panel').style.display = "none";
+                document.getElementById('login-panel').style.display = "block";
+            }
+        }
+
+        // Dedicated Login View logic handler
+        function loginUser() {
+            const userInput = document.getElementById('login-username').value.trim();
+            const passInput = document.getElementById('login-password').value;
+            const errorDiv = document.getElementById('login-error');
+
+            errorDiv.style.display = "none";
+
+            if (userInput === "" || passInput === "") {
+                errorDiv.textContent = "Please enter both fields!";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            const lowerUser = userInput.toLowerCase();
+
+            // Check if profile exists and password matches
+            if (globalAccountsDatabase.hasOwnProperty(lowerUser) && globalAccountsDatabase[lowerUser].password === passInput) {
+                // Match visual case with existing record if possible, else keep entry casing
+                myUsername = userInput;
+                launchDashboard();
+            } else {
+                errorDiv.textContent = "Invalid username or password!";
+                errorDiv.style.display = "block";
+            }
+        }
+
+        // Dedicated Registration logic handler
         function signUpUser() {
             const usernameInput = document.getElementById('auth-username').value.trim();
             const emailInput = document.getElementById('auth-email').value.trim().toLowerCase();
             const passwordInput = document.getElementById('auth-password').value;
-            const errorDiv = document.getElementById('auth-error');
+            const errorDiv = document.getElementById('register-error');
 
             errorDiv.style.display = "none";
 
@@ -485,9 +564,14 @@
                 }
             }
 
-            globalAccountsDatabase[lowerUsername] = { email: emailInput };
+            // Save credentials inside database runtime map
+            globalAccountsDatabase[lowerUsername] = { email: emailInput, password: passwordInput };
 
             myUsername = usernameInput;
+            launchDashboard();
+        }
+
+        function launchDashboard() {
             playerPoints = 1000;
             ownedItems = [];
             equippedItems = { hat: "", shirt: "", pants: "" };
@@ -502,11 +586,19 @@
             document.getElementById('auth-screen').classList.remove('active');
             document.getElementById('home-screen').classList.add('active');
             showSubPage('feed-view');
+
+            // Clear data inputs
+            document.getElementById('login-username').value = "";
+            document.getElementById('login-password').value = "";
+            document.getElementById('auth-username').value = "";
+            document.getElementById('auth-email').value = "";
+            document.getElementById('auth-password').value = "";
         }
 
         function logoutUser() {
             document.getElementById('home-screen').classList.remove('active');
             document.getElementById('auth-screen').classList.add('active');
+            toggleAuthView('login');
         }
 
         function showSubPage(pageId) {
