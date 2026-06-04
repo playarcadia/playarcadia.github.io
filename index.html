@@ -241,6 +241,12 @@
             margin-bottom: 10px;
             display: none;
         }
+        
+        .coming-soon-text {
+            font-style: italic;
+            color: gray;
+            padding: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -252,7 +258,7 @@
             <div id="auth-error" class="error-message">Error container</div>
 
             <label>Username:</label>
-            <input type="text" id="auth-username" placeholder="Enter Username (e.g. Mauro)">
+            <input type="text" id="auth-username" placeholder="Enter Username">
             
             <label>Email:</label>
             <input type="email" id="auth-email" placeholder="Enter Email">
@@ -316,20 +322,14 @@
                                 <div class="shop-category">
                                     <h4>Hats</h4>
                                     <div class="item-card"><h5>Hat 1</h5><p>10 Pts</p><button id="btn-Hat1" onclick="handleItemInteraction('hat', 'Hat1', 10)">Buy</button></div>
-                                    <div class="item-card"><h5>Hat 2</h5><p>50 Pts</p><button id="btn-Hat2" onclick="handleItemInteraction('hat', 'Hat2', 50)">Buy</button></div>
-                                    <div class="item-card"><h5>Hat 3</h5><p>75 Pts</p><button id="btn-Hat3" onclick="handleItemInteraction('hat', 'Hat3', 75)">Buy</button></div>
                                 </div>
                                 <div class="shop-category">
                                     <h4>Shirts</h4>
-                                    <div class="item-card"><h5>Shirt 1</h5><p>20 Pts</p><button id="btn-Shirt1" onclick="handleItemInteraction('shirt', 'Shirt1', 20)">Buy</button></div>
-                                    <div class="item-card"><h5>Shirt 2</h5><p>10 Pts</p><button id="btn-Shirt2" onclick="handleItemInteraction('shirt', 'Shirt2', 10)">Buy</button></div>
-                                    <div class="item-card"><h5>Shirt 3</h5><p>35 Pts</p><button id="btn-Shirt3" onclick="handleItemInteraction('shirt', 'Shirt3', 35)">Buy</button></div>
+                                    <p class="coming-soon-text">Shirts coming soon!</p>
                                 </div>
                                 <div class="shop-category">
                                     <h4>Pants</h4>
-                                    <div class="item-card"><h5>Pants 1</h5><p>15 Pts</p><button id="btn-Pants1" onclick="handleItemInteraction('pants', 'Pants1', 15)">Buy</button></div>
-                                    <div class="item-card"><h5>Pants 2</h5><p>20 Pts</p><button id="btn-Pants2" onclick="handleItemInteraction('pants', 'Pants2', 20)">Buy</button></div>
-                                    <div class="item-card"><h5>Pants 3</h5><p>10 Pts</p><button id="btn-Pants3" onclick="handleItemInteraction('pants', 'Pants3', 10)">Buy</button></div>
+                                    <p class="coming-soon-text">Pants coming soon!</p>
                                 </div>
                             </div>
                         </div>
@@ -438,7 +438,6 @@
         let currentlyViewingProfile = ""; 
 
         // Existing Registered Accounts (For Username Taken & Unique Email checks)
-        // Saved in lowercase for strict system comparisons
         let globalAccountsDatabase = {
             "mauro": { email: "mauro@mail.com" },
             "friend1": { email: "friend1@mail.com" },
@@ -448,9 +447,9 @@
 
         // Database holding profile configurations for your friends display values
         let profilesDatabase = {
-            "Friend1": { color: "blue", bio: "I like coding flat layouts.", hat: "Hat1", shirt: "Shirt2", pants: "Pants1" },
-            "NoobMaster": { color: "red", bio: "Beaten every game on this hub.", hat: "Hat3", shirt: "Shirt1", pants: "Pants2" },
-            "Guest404": { color: "purple", bio: "Error: Bio not found.", hat: "", shirt: "Shirt3", pants: "Pants3" }
+            "Friend1": { color: "blue", bio: "I like coding flat layouts.", hat: "Hat1", shirt: "", pants: "" },
+            "NoobMaster": { color: "red", bio: "Beaten every game on this hub.", hat: "Hat1", shirt: "", pants: "" },
+            "Guest404": { color: "purple", bio: "Error: Bio not found.", hat: "", shirt: "", pants: "" }
         };
 
         // Current active friends array list
@@ -462,7 +461,6 @@
             const passwordInput = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('auth-error');
 
-            // Reset Error Display
             errorDiv.style.display = "none";
 
             if(usernameInput === "" || emailInput === "" || passwordInput === "") {
@@ -471,17 +469,14 @@
                 return;
             }
 
-            // Create a completely lowercase version to check for matches
             const lowerUsername = usernameInput.toLowerCase();
 
-            // 1. Check if username is taken (Case-Insensitive)
             if (globalAccountsDatabase.hasOwnProperty(lowerUsername)) {
                 errorDiv.textContent = `The username "${usernameInput}" is already taken!`;
                 errorDiv.style.display = "block";
                 return;
             }
 
-            // 2. Check if email is already in use
             for (let user in globalAccountsDatabase) {
                 if (globalAccountsDatabase[user].email === emailInput) {
                     errorDiv.textContent = "This email is already linked to another account!";
@@ -490,10 +485,8 @@
                 }
             }
 
-            // If passed, register user globally
             globalAccountsDatabase[lowerUsername] = { email: emailInput };
 
-            // Setup current player state values
             myUsername = usernameInput;
             playerPoints = 1000;
             ownedItems = [];
@@ -551,7 +544,6 @@
             });
         }
 
-        // Action fixed to read current global states properly
         function viewOwnProfile() {
             currentlyViewingProfile = "me";
             document.getElementById('profile-page-title').textContent = "My Public Profile";
