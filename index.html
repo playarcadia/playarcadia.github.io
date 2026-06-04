@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Site</title>
+    <style>
+        /* Comic Sans, flat layout, zero rounding, no decorative colors */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif;
+            border-radius: 0 !important;
+        }
+
+        body {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* SCREEN MANAGEMENT */
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+
+        /* Centered Auth Screen */
+        #auth-screen {
+            display: none; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: white;
+            z-index: 100;
+        }
+        #auth-screen.active {
+            display: flex;
+        }
+
+        .auth-box {
+            border: 3px solid black;
+            padding: 30px;
+            background: white;
+            width: 360px;
+        }
+
+        /* Inputs and Buttons */
+        input, textarea, select {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 2px solid black;
+            background: white;
+            color: black;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: 2px solid black;
+            background: white;
+            color: black;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: black;
+            color: white;
+        }
+
+        /* Top Bar Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 2px solid black;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border: 2px dashed black;
+            object-fit: contain;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Main Grid Layout */
+        .grid-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .main-content {
+            flex: 3;
+        }
+
+        .sidebar {
+            flex: 1;
+            border: 2px solid black;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Sub-Pages */
+        .sub-page {
+            border: 2px solid black;
+            padding: 20px;
+            background: white;
+        }
+
+        /* Avatar Layout Box */
+        .avatar-layout-box {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .avatar-frame {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border: 2px solid black;
+            background: white;
+        }
+
+        /* Small Avatar Frame for Friends Sidebar */
+        .friend-avatar-frame {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: 1px solid black;
+            background: white;
+        }
+
+        .avatar-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+        .layer-base {
+            display: block;
+        }
+
+        .shop-category {
+            margin-bottom: 20px;
+            border-bottom: 1px dashed black;
+            padding-bottom: 10px;
+        }
+
+        .item-card {
+            display: inline-block;
+            border: 2px solid black;
+            padding: 10px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            text-align: center;
+            width: 120px;
+        }
+
+        /* Game Elements */
+        .game-item {
+            border: 2px solid black;
+            padding: 15px;
+            width: 180px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .game-icon-img {
+            width: 80px;
+            height: 80px;
+            border: 2px solid black;
+            margin-bottom: 10px;
+        }
+
+        .big-thumbnail {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border: 2px solid black;
+            margin-bottom: 15px;
+        }
+
+        /* Friends List Setup */
+        .friends-ul {
+            list-style-type: none;
+            margin-top: 10px;
+        }
+        
+        .friend-li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid black;
+            padding: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .friend-li:hover {
+            background: #f0f0f0;
+        }
+
+        /* Friend Request Item Style */
+        .request-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            border-bottom: 1px dashed black;
+            padding-bottom: 5px;
+        }
+        .request-item button {
+            padding: 2px 6px;
+            font-size: 12px;
+        }
+
+        /* Small Error Warning Text */
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="auth-screen" class="screen active">
+        <div class="auth-box">
+            <h2>Sign Up / Register</h2>
+            <br>
+            <div id="auth-error" class="error-message">Error container</div>
+
+            <label>Username:</label>
+            <input type="text" id="auth-username" placeholder="Enter Username (e.g. Mauro)">
+            
+            <label>Email:</label>
+            <input type="email" id="auth-email" placeholder="Enter Email">
+            
+            <label>Password:</label>
+            <input type="password" id="auth-password" placeholder="Enter Password">
+            
+            <button onclick="signUpUser()">Register Account</button>
+        </div>
+    </div>
+
+    <div id="home-screen" class="screen">
+        <header>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <img src="logo.png" alt="logo.png" class="logo">
+                <div>
+                    <span id="welcome-user" style="font-weight: bold; font-size: 20px;">Username</span>
+                    <br>
+                    <span id="points-display" style="font-weight: bold; color: green;">Points: 1000</span>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button onclick="showSubPage('feed-view')">Home Feed</button>
+                <button onclick="showSubPage('avatar-view')">Character Designer</button>
+                <button onclick="viewOwnProfile()">My Profile</button>
+                <button onclick="logoutUser()">Log Out</button>
+            </div>
+        </header>
+
+        <div class="grid-container">
+            <div class="main-content">
+                
+                <div id="feed-view" class="sub-page-container">
+                    <h3>Games</h3>
+                    <br>
+                    <div class="game-item" onclick="showSubPage('game-detail-view')">
+                        <img src="Icon1.png" alt="Icon1.png" class="game-icon-img">
+                        <h4>Test Place</h4>
+                    </div>
+                </div>
+
+                <div id="avatar-view" class="sub-page-container" style="display: none;">
+                    <div class="sub-page">
+                        <h2>Character Designer & Shop</h2>
+                        <p>Buy items with your Points, then equip them onto your character!</p>
+                        
+                        <div class="avatar-layout-box">
+                            <div>
+                                <div class="avatar-frame">
+                                    <img src="character.png" alt="character.png" class="avatar-layer layer-base">
+                                    <img id="layer-hat" src="" class="avatar-layer">
+                                    <img id="layer-shirt" src="" class="avatar-layer">
+                                    <img id="layer-pants" src="" class="avatar-layer">
+                                </div>
+                                <br>
+                                <button onclick="unequipAll()">Unequip All</button>
+                            </div>
+
+                            <div style="flex: 1;">
+                                <div class="shop-category">
+                                    <h4>Hats</h4>
+                                    <div class="item-card"><h5>Hat 1</h5><p>10 Pts</p><button id="btn-Hat1" onclick="handleItemInteraction('hat', 'Hat1', 10)">Buy</button></div>
+                                    <div class="item-card"><h5>Hat 2</h5><p>50 Pts</p><button id="btn-Hat2" onclick="handleItemInteraction('hat', 'Hat2', 50)">Buy</button></div>
+                                    <div class="item-card"><h5>Hat 3</h5><p>75 Pts</p><button id="btn-Hat3" onclick="handleItemInteraction('hat', 'Hat3', 75)">Buy</button></div>
+                                </div>
+                                <div class="shop-category">
+                                    <h4>Shirts</h4>
+                                    <div class="item-card"><h5>Shirt 1</h5><p>20 Pts</p><button id="btn-Shirt1" onclick="handleItemInteraction('shirt', 'Shirt1', 20)">Buy</button></div>
+                                    <div class="item-card"><h5>Shirt 2</h5><p>10 Pts</p><button id="btn-Shirt2" onclick="handleItemInteraction('shirt', 'Shirt2', 10)">Buy</button></div>
+                                    <div class="item-card"><h5>Shirt 3</h5><p>35 Pts</p><button id="btn-Shirt3" onclick="handleItemInteraction('shirt', 'Shirt3', 35)">Buy</button></div>
+                                </div>
+                                <div class="shop-category">
+                                    <h4>Pants</h4>
+                                    <div class="item-card"><h5>Pants 1</h5><p>15 Pts</p><button id="btn-Pants1" onclick="handleItemInteraction('pants', 'Pants1', 15)">Buy</button></div>
+                                    <div class="item-card"><h5>Pants 2</h5><p>20 Pts</p><button id="btn-Pants2" onclick="handleItemInteraction('pants', 'Pants2', 20)">Buy</button></div>
+                                    <div class="item-card"><h5>Pants 3</h5><p>10 Pts</p><button id="btn-Pants3" onclick="handleItemInteraction('pants', 'Pants3', 10)">Buy</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="profile-view" class="sub-page-container" style="display: none;">
+                    <div class="sub-page">
+                        <h2 id="profile-page-title">My Public Profile</h2>
+                        <br>
+                        
+                        <div style="display: flex; gap: 30px; align-items: flex-start;">
+                            <div class="avatar-frame">
+                                <img src="character.png" alt="character.png" class="avatar-layer layer-base">
+                                <img id="profile-layer-hat" src="" class="avatar-layer">
+                                <img id="profile-layer-shirt" src="" class="avatar-layer">
+                                <img id="profile-layer-pants" src="" class="avatar-layer">
+                            </div>
+                            
+                            <div style="flex: 1;">
+                                <h1 id="profile-username-display">Username</h1>
+                                <p id="profile-bio-display" style="border: 1px dashed black; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
+                                
+                                <button id="unfriend-btn" style="display: none; border: 2px solid red; color: red;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
+                            </div>
+                        </div>
+                        
+                        <div id="profile-edit-block">
+                            <br><hr><br>
+                            <h3>Edit Settings</h3>
+                            <br>
+                            <label>Edit Bio:</label>
+                            <textarea id="edit-bio-input" placeholder="Write something about yourself..."></textarea>
+                            
+                            <label>Username Text Color:</label>
+                            <select id="edit-color-input">
+                                <option value="black">Black</option>
+                                <option value="red">Red</option>
+                                <option value="blue">Blue</option>
+                                <option value="orange">Orange</option>
+                                <option value="purple">Purple</option>
+                            </select>
+                            
+                            <button onclick="saveProfileChanges()">Save Profile Settings</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="game-detail-view" class="sub-page-container" style="display: none;">
+                    <div class="sub-page">
+                        <button onclick="showSubPage('feed-view')">← Back to Home</button>
+                        <br><br>
+                        <h2>Test Place</h2>
+                        <br>
+                        <img src="Thumbnail1.png" alt="Thumbnail1.png" class="big-thumbnail">
+                        <p>This is the description text for Test Place page view.</p>
+                        <br>
+                        <button style="font-size: 24px; padding: 10px 30px;">PLAY</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="sidebar">
+                <div style="border: 2px solid black; padding: 10px; background: white;">
+                    <h3>Friends List</h3>
+                    <p style="font-size:11px; color:gray;">Click a player to view profile</p>
+                    <br>
+                    <div style="display: flex; gap: 5px;">
+                        <input type="text" id="friend-name" placeholder="Name" style="width: 100px; margin-bottom: 0;">
+                        <button onclick="addFriendFromInput()">Add</button>
+                    </div>
+                    
+                    <div class="friends-ul" id="friends-list-container">
+                        </div>
+                </div>
+
+                <div style="border: 2px solid black; padding: 10px; background: white;">
+                    <h3>Friend Requests</h3>
+                    <br>
+                    <div id="requests-list-container">
+                        <div class="request-item" id="req-NoobMaster">
+                            <span>NoobMaster</span>
+                            <button onclick="acceptFriendRequest('NoobMaster')">Accept</button>
+                        </div>
+                        <div class="request-item" id="req-Guest404">
+                            <span>Guest404</span>
+                            <button onclick="acceptFriendRequest('Guest404')">Accept</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Global User Data States
+        let myUsername = "Username";
+        let playerPoints = 1000;
+        let ownedItems = [];
+        let myBio = "No bio written yet...";
+        let myColor = "black";
+        
+        let equippedItems = { hat: "", shirt: "", pants: "" };
+        let currentlyViewingProfile = ""; 
+
+        // Existing Registered Accounts (For Username Taken & Unique Email checks)
+        // Saved in lowercase for strict system comparisons
+        let globalAccountsDatabase = {
+            "mauro": { email: "mauro@mail.com" },
+            "friend1": { email: "friend1@mail.com" },
+            "noobmaster": { email: "noob@mail.com" },
+            "guest404": { email: "ghost@mail.com" }
+        };
+
+        // Database holding profile configurations for your friends display values
+        let profilesDatabase = {
+            "Friend1": { color: "blue", bio: "I like coding flat layouts.", hat: "Hat1", shirt: "Shirt2", pants: "Pants1" },
+            "NoobMaster": { color: "red", bio: "Beaten every game on this hub.", hat: "Hat3", shirt: "Shirt1", pants: "Pants2" },
+            "Guest404": { color: "purple", bio: "Error: Bio not found.", hat: "", shirt: "Shirt3", pants: "Pants3" }
+        };
+
+        // Current active friends array list
+        let activeFriendsList = ["Friend1"];
+
+        function signUpUser() {
+            const usernameInput = document.getElementById('auth-username').value.trim();
+            const emailInput = document.getElementById('auth-email').value.trim().toLowerCase();
+            const passwordInput = document.getElementById('auth-password').value;
+            const errorDiv = document.getElementById('auth-error');
+
+            // Reset Error Display
+            errorDiv.style.display = "none";
+
+            if(usernameInput === "" || emailInput === "" || passwordInput === "") {
+                errorDiv.textContent = "Please fill out all information fields!";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            // Create a completely lowercase version to check for matches
+            const lowerUsername = usernameInput.toLowerCase();
+
+            // 1. Check if username is taken (Case-Insensitive)
+            if (globalAccountsDatabase.hasOwnProperty(lowerUsername)) {
+                errorDiv.textContent = `The username "${usernameInput}" is already taken!`;
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            // 2. Check if email is already in use
+            for (let user in globalAccountsDatabase) {
+                if (globalAccountsDatabase[user].email === emailInput) {
+                    errorDiv.textContent = "This email is already linked to another account!";
+                    errorDiv.style.display = "block";
+                    return;
+                }
+            }
+
+            // If passed, register user globally
+            globalAccountsDatabase[lowerUsername] = { email: emailInput };
+
+            // Setup current player state values
+            myUsername = usernameInput;
+            playerPoints = 1000;
+            ownedItems = [];
+            equippedItems = { hat: "", shirt: "", pants: "" };
+            myBio = "No bio written yet...";
+            myColor = "black";
+
+            document.getElementById('welcome-user').textContent = myUsername;
+            document.getElementById('welcome-user').style.color = myColor;
+            updatePointsDisplay();
+            renderFriendsSidebar();
+
+            document.getElementById('auth-screen').classList.remove('active');
+            document.getElementById('home-screen').classList.add('active');
+            showSubPage('feed-view');
+        }
+
+        function logoutUser() {
+            document.getElementById('home-screen').classList.remove('active');
+            document.getElementById('auth-screen').classList.add('active');
+        }
+
+        function showSubPage(pageId) {
+            const pages = ['feed-view', 'avatar-view', 'profile-view', 'game-detail-view'];
+            pages.forEach(id => {
+                document.getElementById(id).style.display = (id === pageId) ? 'block' : 'none';
+            });
+        }
+
+        function updatePointsDisplay() {
+            document.getElementById('points-display').textContent = "Points: " + playerPoints;
+        }
+
+        function renderFriendsSidebar() {
+            const container = document.getElementById('friends-list-container');
+            container.innerHTML = ""; 
+
+            activeFriendsList.forEach(name => {
+                let data = profilesDatabase[name] || { color: "black", hat: "", shirt: "", pants: "" };
+
+                const row = document.createElement('div');
+                row.className = "friend-li";
+                row.onclick = () => viewPlayerProfile(name);
+
+                row.innerHTML = `
+                    <div class="friend-avatar-frame">
+                        <img src="character.png" class="avatar-layer layer-base">
+                        <img src="${data.hat ? data.hat + '.png' : ''}" class="avatar-layer" style="display:${data.hat ? 'block' : 'none'}">
+                        <img src="${data.shirt ? data.shirt + '.png' : ''}" class="avatar-layer" style="display:${data.shirt ? 'block' : 'none'}">
+                        <img src="${data.pants ? data.pants + '.png' : ''}" class="avatar-layer" style="display:${data.pants ? 'block' : 'none'}">
+                    </div>
+                    <span style="color: ${data.color}; font-weight: bold;">${name}</span>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Action fixed to read current global states properly
+        function viewOwnProfile() {
+            currentlyViewingProfile = "me";
+            document.getElementById('profile-page-title').textContent = "My Public Profile";
+            document.getElementById('profile-username-display').textContent = myUsername;
+            document.getElementById('profile-username-display').style.color = myColor;
+            document.getElementById('profile-bio-display').textContent = myBio;
+            
+            setProfileAvatarGraphics(equippedItems.hat, equippedItems.shirt, equippedItems.pants);
+
+            document.getElementById('unfriend-btn').style.display = "none";
+            document.getElementById('profile-edit-block').style.display = "block";
+            showSubPage('profile-view');
+        }
+
+        function viewPlayerProfile(username) {
+            currentlyViewingProfile = username;
+            let data = profilesDatabase[username] || { color: "black", bio: "No details listed.", hat: "", shirt: "", pants: "" };
+
+            document.getElementById('profile-page-title').textContent = username + "'s Profile";
+            document.getElementById('profile-username-display').textContent = username;
+            document.getElementById('profile-username-display').style.color = data.color;
+            document.getElementById('profile-bio-display').textContent = data.bio;
+
+            setProfileAvatarGraphics(data.hat, data.shirt, data.pants);
+
+            document.getElementById('profile-edit-block').style.display = "none";
+            document.getElementById('unfriend-btn').style.display = "block";
+            showSubPage('profile-view');
+        }
+
+        function setProfileAvatarGraphics(hat, shirt, pants) {
+            const hLayer = document.getElementById('profile-layer-hat');
+            const sLayer = document.getElementById('profile-layer-shirt');
+            const pLayer = document.getElementById('profile-layer-pants');
+
+            hLayer.src = hat ? hat + ".png" : "";
+            hLayer.style.display = hat ? "block" : "none";
+
+            sLayer.src = shirt ? shirt + ".png" : "";
+            sLayer.style.display = shirt ? "block" : "none";
+
+            pLayer.src = pants ? pants + ".png" : "";
+            pLayer.style.display = pants ? "block" : "none";
+        }
+
+        function unfriendCurrentProfile() {
+            if (currentlyViewingProfile !== "me" && currentlyViewingProfile !== "") {
+                activeFriendsList = activeFriendsList.filter(name => name !== currentlyViewingProfile);
+                renderFriendsSidebar();
+                showSubPage('feed-view'); 
+            }
+        }
+
+        function handleItemInteraction(category, itemName, price) {
+            const btn = document.getElementById(`btn-${itemName}`);
+
+            if (!ownedItems.includes(itemName)) {
+                if (playerPoints >= price) {
+                    playerPoints -= price;
+                    ownedItems.push(itemName);
+                    updatePointsDisplay();
+                    btn.textContent = "Equip";
+                }
+                return;
+            }
+
+            const designerLayer = document.getElementById(`layer-${category}`);
+
+            if (equippedItems[category] === itemName) {
+                equippedItems[category] = "";
+                designerLayer.style.display = "none";
+                btn.textContent = "Equip";
+            } else {
+                if (equippedItems[category] !== "") {
+                    const oldItemButton = document.getElementById(`btn-${equippedItems[category]}`);
+                    if (oldItemButton) oldItemButton.textContent = "Equip";
+                }
+
+                equippedItems[category] = itemName;
+                designerLayer.src = itemName + ".png";
+                designerLayer.style.display = "block";
+                btn.textContent = "Unequip";
+            }
+        }
+
+        function unequipAll() {
+            for (let category in equippedItems) {
+                if (equippedItems[category] !== "") {
+                    const btn = document.getElementById(`btn-${equippedItems[category]}`);
+                    if (btn) btn.textContent = "Equip";
+                    equippedItems[category] = "";
+                }
+            }
+            document.getElementById('layer-hat').style.display = "none";
+            document.getElementById('layer-shirt').style.display = "none";
+            document.getElementById('layer-pants').style.display = "none";
+        }
+
+        function saveProfileChanges() {
+            myBio = document.getElementById('edit-bio-input').value || "No bio written yet...";
+            myColor = document.getElementById('edit-color-input').value;
+
+            document.getElementById('profile-bio-display').textContent = myBio;
+            document.getElementById('profile-username-display').style.color = myColor;
+            document.getElementById('welcome-user').style.color = myColor;
+        }
+
+        function addFriendFromInput() {
+            const input = document.getElementById('friend-name');
+            const val = input.value.trim();
+            if(val && !activeFriendsList.includes(val)) {
+                if(!profilesDatabase[val]) {
+                    profilesDatabase[val] = { color: "black", bio: "A new friend!", hat: "", shirt: "", pants: "" };
+                }
+                activeFriendsList.push(val);
+                renderFriendsSidebar();
+                input.value = '';
+            }
+        }
+
+        function acceptFriendRequest(senderName) {
+            const requestRow = document.getElementById(`req-${senderName}`);
+            if (requestRow) {
+                requestRow.remove();
+                if (!activeFriendsList.includes(senderName)) {
+                    activeFriendsList.push(senderName);
+                    renderFriendsSidebar();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
