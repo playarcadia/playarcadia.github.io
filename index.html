@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade Site</title>
     <style>
-        /* Comic Sans, flat layout, zero rounding, clean matte sage monochromatic theme */
+        /* Comic Sans, flat layout, zero rounding, clean bright monochromatic blue theme */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,8 +15,8 @@
         }
 
         body {
-            background-color: #2d4a3e; /* Smooth matte sage green base */
-            color: black;
+            background-color: #e0f2fe; /* Bright sky blue background */
+            color: #0f172a; /* Dark slate text for high contrast readability */
             padding: 20px;
             min-height: 100vh;
         }
@@ -37,7 +37,7 @@
             align-items: center;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #2d4a3e;
+            background: #e0f2fe;
             z-index: 100;
         }
         #auth-screen.active {
@@ -45,9 +45,9 @@
         }
 
         .auth-box {
-            border: 2px solid black;
+            border: 2px solid #1e40af; /* Royal blue border lines */
             padding: 30px;
-            background: #416d5c; /* Medium tonal green for container windows */
+            background: #bae6fd; /* Light blue accent panel background */
             width: 360px;
         }
 
@@ -56,7 +56,7 @@
             margin-top: 10px;
             background: none;
             border: none;
-            color: #d8ebd9;
+            color: #1d4ed8;
             text-decoration: underline;
             cursor: pointer;
             font-weight: normal;
@@ -66,30 +66,30 @@
             color: black;
         }
 
-        /* Inputs and Buttons - Completely replaced stark white with a light mint green tone */
+        /* Inputs and Buttons - Crisp ice-blue colors matching the bright setup */
         input, textarea, select {
             display: block;
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
-            border: 2px solid black;
-            background: #d8ebd9; /* Light mint tint instead of white */
+            border: 2px solid #1e40af;
+            background: #f0f9ff; /* Clear ice blue inputs */
             color: black;
         }
 
-        /* Completely flat button style with no 3D shadow or offset transforms */
+        /* Completely flat button style with bright blue hover interactions */
         button {
             padding: 8px 16px;
-            border: 2px solid black;
-            background: #d8ebd9; /* Light mint tone */
-            color: black;
+            border: 2px solid #1e40af;
+            background: #f0f9ff;
+            color: #1e40af;
             cursor: pointer;
             font-weight: bold;
         }
 
         button:hover {
-            background: black;
-            color: #d8ebd9;
+            background: #1e40af;
+            color: #f0f9ff;
         }
 
         /* Top Bar Header */
@@ -97,10 +97,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 15px;
             margin-bottom: 20px;
-            background: #416d5c;
+            background: #bae6fd;
         }
 
         /* Wide text-based interactive logo with no border outline */
@@ -139,26 +139,26 @@
 
         .sidebar {
             flex: 1;
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: #416d5c;
+            background: #bae6fd;
         }
 
         /* Internal Sidebar nested widgets */
         .sidebar-widget {
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 10px;
-            background: #709f8d; /* Complementary mid-light green accent panel */
+            background: #7dd3fc; /* Mid-tone bright blue accent panel */
         }
 
         /* Sub-Pages Window Containers */
         .sub-page {
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 20px;
-            background: #416d5c;
+            background: #bae6fd;
         }
 
         /* Avatar Layout Box */
@@ -172,8 +172,8 @@
             position: relative;
             width: 200px;
             height: 200px;
-            border: 2px solid black;
-            background: #d8ebd9;
+            border: 2px solid #1e40af;
+            background: #f0f9ff;
         }
 
         /* Small Avatar Frame for Friends Sidebar */
@@ -181,8 +181,8 @@
             position: relative;
             width: 40px;
             height: 40px;
-            border: 1px solid black;
-            background: #d8ebd9;
+            border: 1px solid #1e40af;
+            background: #f0f9ff;
         }
 
         .avatar-layer {
@@ -200,49 +200,49 @@
 
         .shop-category {
             margin-bottom: 20px;
-            border-bottom: 1px dashed black;
+            border-bottom: 1px dashed #1e40af;
             padding-bottom: 10px;
         }
 
         .item-card {
             display: inline-block;
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 10px;
             margin-right: 10px;
             margin-bottom: 10px;
             text-align: center;
             width: 120px;
-            background: #d8ebd9;
+            background: #f0f9ff;
         }
 
         /* Game Elements - Flat style matching button behavior */
         .game-item {
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 15px;
             width: 180px;
             cursor: pointer;
             text-align: center;
-            background: #d8ebd9;
+            background: #f0f9ff;
         }
         .game-item:hover {
-            background: #709f8d;
+            background: #7dd3fc;
         }
 
         .game-icon-img {
             width: 80px;
             height: 80px;
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             margin-bottom: 10px;
-            background: #416d5c;
+            background: #bae6fd;
         }
 
         .big-thumbnail {
             width: 100%;
             max-width: 500px;
             height: auto;
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             margin-bottom: 15px;
-            background: #416d5c;
+            background: #bae6fd;
         }
 
         /* Friends List Setup */
@@ -255,14 +255,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 2px solid black;
+            border: 2px solid #1e40af;
             padding: 5px;
             margin-bottom: 8px;
             cursor: pointer;
-            background: #d8ebd9;
+            background: #f0f9ff;
         }
         .friend-li:hover {
-            background: #709f8d;
+            background: #7dd3fc;
         }
 
         /* Friend Request Item Style */
@@ -271,7 +271,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
-            border-bottom: 1px dashed black;
+            border-bottom: 1px dashed #1e40af;
             padding-bottom: 5px;
         }
         .request-item button {
@@ -281,7 +281,7 @@
 
         /* Small Error Warning Text */
         .error-message {
-            color: #ff9999;
+            color: #b91c1c;
             font-size: 14px;
             font-weight: bold;
             margin-bottom: 10px;
@@ -290,7 +290,7 @@
         
         .coming-soon-text {
             font-style: italic;
-            color: #d8ebd9;
+            color: #1e40af;
             padding: 5px 0;
         }
     </style>
@@ -345,7 +345,7 @@
                         <span id="welcome-user" style="font-weight: bold; font-size: 20px;">Username</span>
                         <img id="header-badge" src="badge.png" alt="badge" class="user-badge" style="display: none;">
                     </div>
-                    <span id="points-display" style="font-weight: bold; color: #d8ebd9;">Points: 1000</span>
+                    <span id="points-display" style="font-weight: bold; color: #1e40af;">Points: 1000</span>
                 </div>
             </div>
 
@@ -424,14 +424,14 @@
                                     <h1 id="profile-username-display">Username</h1>
                                     <img id="profile-badge" src="badge.png" alt="badge" class="user-badge" style="display: none;">
                                 </div>
-                                <p id="profile-bio-display" style="border: 2px solid black; background: #709f8d; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
+                                <p id="profile-bio-display" style="border: 2px solid #1e40af; background: #7dd3fc; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
                                 
-                                <button id="unfriend-btn" style="display: none; border: 2px solid #ff4d4d; color: #ff4d4d; background: #d8ebd9;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
+                                <button id="unfriend-btn" style="display: none; border: 2px solid #ef4444; color: #ef4444; background: #f0f9ff;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
                             </div>
                         </div>
                         
                         <div id="profile-edit-block">
-                            <br><hr><br>
+                            <br><hr style="border-color: #1e40af;"><br>
                             <h3>Edit Profile Display</h3>
                             <br>
                             <label>Edit Bio:</label>
@@ -468,9 +468,9 @@
                     <div class="sub-page">
                         <h2>Settings</h2>
                         <br>
-                        <p style="color: #d8ebd9; margin-bottom: 20px;">System configuration panels and account safety utilities.</p>
+                        <p style="color: #1e40af; margin-bottom: 20px;">System configuration panels and account safety utilities.</p>
                         
-                        <button style="border-color: #ff4d4d; color: #ff4d4d;" onclick="logoutUser()">Log Out</button>
+                        <button style="border-color: #ef4444; color: #ef4444;" onclick="logoutUser()">Log Out</button>
                     </div>
                 </div>
 
