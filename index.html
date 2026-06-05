@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade Site</title>
     <style>
-        /* Comic Sans, flat layout, zero rounding, clean dark forest and sage green theme */
+        /* Comic Sans, flat layout, zero rounding, clean matte sage monochromatic theme */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,7 +15,7 @@
         }
 
         body {
-            background-color: #1e3d2f; /* Deep forest green base background */
+            background-color: #2d4a3e; /* Smooth matte sage green base */
             color: black;
             padding: 20px;
             min-height: 100vh;
@@ -37,7 +37,7 @@
             align-items: center;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #1e3d2f;
+            background: #2d4a3e;
             z-index: 100;
         }
         #auth-screen.active {
@@ -47,7 +47,7 @@
         .auth-box {
             border: 2px solid black;
             padding: 30px;
-            background: #e8efe9; /* Very light sage green for panels */
+            background: #416d5c; /* Medium tonal green for container windows */
             width: 360px;
         }
 
@@ -56,25 +56,24 @@
             margin-top: 10px;
             background: none;
             border: none;
-            color: blue;
+            color: #d8ebd9;
             text-decoration: underline;
             cursor: pointer;
             font-weight: normal;
             padding: 0;
         }
         .auth-toggle-link:hover {
-            background: none;
             color: black;
         }
 
-        /* Inputs and Buttons */
+        /* Inputs and Buttons - Completely replaced stark white with a light mint green tone */
         input, textarea, select {
             display: block;
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
             border: 2px solid black;
-            background: white;
+            background: #d8ebd9; /* Light mint tint instead of white */
             color: black;
         }
 
@@ -82,7 +81,7 @@
         button {
             padding: 8px 16px;
             border: 2px solid black;
-            background: white;
+            background: #d8ebd9; /* Light mint tone */
             color: black;
             cursor: pointer;
             font-weight: bold;
@@ -90,7 +89,7 @@
 
         button:hover {
             background: black;
-            color: white;
+            color: #d8ebd9;
         }
 
         /* Top Bar Header */
@@ -101,7 +100,7 @@
             border: 2px solid black;
             padding: 15px;
             margin-bottom: 20px;
-            background: #e8efe9;
+            background: #416d5c;
         }
 
         /* Wide text-based interactive logo with no border outline */
@@ -145,14 +144,21 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: #e8efe9;
+            background: #416d5c;
+        }
+
+        /* Internal Sidebar nested widgets */
+        .sidebar-widget {
+            border: 2px solid black;
+            padding: 10px;
+            background: #709f8d; /* Complementary mid-light green accent panel */
         }
 
         /* Sub-Pages Window Containers */
         .sub-page {
             border: 2px solid black;
             padding: 20px;
-            background: #e8efe9;
+            background: #416d5c;
         }
 
         /* Avatar Layout Box */
@@ -167,7 +173,7 @@
             width: 200px;
             height: 200px;
             border: 2px solid black;
-            background: white;
+            background: #d8ebd9;
         }
 
         /* Small Avatar Frame for Friends Sidebar */
@@ -176,7 +182,7 @@
             width: 40px;
             height: 40px;
             border: 1px solid black;
-            background: white;
+            background: #d8ebd9;
         }
 
         .avatar-layer {
@@ -206,7 +212,7 @@
             margin-bottom: 10px;
             text-align: center;
             width: 120px;
-            background: white;
+            background: #d8ebd9;
         }
 
         /* Game Elements - Flat style matching button behavior */
@@ -216,10 +222,10 @@
             width: 180px;
             cursor: pointer;
             text-align: center;
-            background: white;
+            background: #d8ebd9;
         }
         .game-item:hover {
-            background: #a3b899; /* Olive green highlight on hover */
+            background: #709f8d;
         }
 
         .game-icon-img {
@@ -227,6 +233,7 @@
             height: 80px;
             border: 2px solid black;
             margin-bottom: 10px;
+            background: #416d5c;
         }
 
         .big-thumbnail {
@@ -235,6 +242,7 @@
             height: auto;
             border: 2px solid black;
             margin-bottom: 15px;
+            background: #416d5c;
         }
 
         /* Friends List Setup */
@@ -251,10 +259,10 @@
             padding: 5px;
             margin-bottom: 8px;
             cursor: pointer;
-            background: white;
+            background: #d8ebd9;
         }
         .friend-li:hover {
-            background: #a3b899;
+            background: #709f8d;
         }
 
         /* Friend Request Item Style */
@@ -273,15 +281,16 @@
 
         /* Small Error Warning Text */
         .error-message {
-            color: red;
-            font-size: 12px;
+            color: #ff9999;
+            font-size: 14px;
+            font-weight: bold;
             margin-bottom: 10px;
             display: none;
         }
         
         .coming-soon-text {
             font-style: italic;
-            color: gray;
+            color: #d8ebd9;
             padding: 5px 0;
         }
     </style>
@@ -336,7 +345,7 @@
                         <span id="welcome-user" style="font-weight: bold; font-size: 20px;">Username</span>
                         <img id="header-badge" src="badge.png" alt="badge" class="user-badge" style="display: none;">
                     </div>
-                    <span id="points-display" style="font-weight: bold; color: green;">Points: 1000</span>
+                    <span id="points-display" style="font-weight: bold; color: #d8ebd9;">Points: 1000</span>
                 </div>
             </div>
 
@@ -365,7 +374,7 @@
                 <div id="avatar-view" class="sub-page-container" style="display: none;">
                     <div class="sub-page">
                         <h2>Character Designer & Shop</h2>
-                        <p>Buy items with your Points, then equip them onto your character!</p>
+                        <p style="margin-bottom: 10px;">Buy items with your Points, then equip them onto your character!</p>
                         
                         <div class="avatar-layout-box">
                             <div>
@@ -415,9 +424,9 @@
                                     <h1 id="profile-username-display">Username</h1>
                                     <img id="profile-badge" src="badge.png" alt="badge" class="user-badge" style="display: none;">
                                 </div>
-                                <p id="profile-bio-display" style="border: 1px dashed black; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
+                                <p id="profile-bio-display" style="border: 2px solid black; background: #709f8d; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
                                 
-                                <button id="unfriend-btn" style="display: none; border: 2px solid red; color: red;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
+                                <button id="unfriend-btn" style="display: none; border: 2px solid #ff4d4d; color: #ff4d4d; background: #d8ebd9;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
                             </div>
                         </div>
                         
@@ -459,18 +468,18 @@
                     <div class="sub-page">
                         <h2>Settings</h2>
                         <br>
-                        <p style="color: gray; margin-bottom: 20px;">System configuration panels and account safety utilities.</p>
+                        <p style="color: #d8ebd9; margin-bottom: 20px;">System configuration panels and account safety utilities.</p>
                         
-                        <button style="border-color: red; color: red;" onclick="logoutUser()">Log Out</button>
+                        <button style="border-color: #ff4d4d; color: #ff4d4d;" onclick="logoutUser()">Log Out</button>
                     </div>
                 </div>
 
             </div>
 
             <div class="sidebar">
-                <div style="border: 2px solid black; padding: 10px; background: white;">
+                <div class="sidebar-widget">
                     <h3>Friends List</h3>
-                    <p style="font-size:11px; color:gray;">Click a player to view profile</p>
+                    <p style="font-size:11px; color:black; opacity: 0.7;">Click a player to view profile</p>
                     <br>
                     <div style="display: flex; gap: 5px;">
                         <input type="text" id="friend-name" placeholder="Name" style="width: 100px; margin-bottom: 0;">
@@ -481,7 +490,7 @@
                         </div>
                 </div>
 
-                <div style="border: 2px solid black; padding: 10px; background: white;">
+                <div class="sidebar-widget">
                     <h3>Friend Requests</h3>
                     <br>
                     <div id="requests-list-container">
@@ -535,7 +544,7 @@
             }
         }
 
-        // Open login handler - Database check bypassed! Logs in any username immediately.
+        // Open login handler
         function loginUser() {
             const userInput = document.getElementById('login-username').value.trim();
             const passInput = document.getElementById('login-password').value;
@@ -553,7 +562,7 @@
             launchDashboard();
         }
 
-        // Open registration handler - Database bypass enabled.
+        // Open registration handler
         function signUpUser() {
             const usernameInput = document.getElementById('auth-username').value.trim();
             const emailInput = document.getElementById('auth-email').value.trim();
