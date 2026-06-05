@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade Site</title>
     <style>
-        /* Comic Sans, flat layout, zero rounding, clean arcade mint green theme */
+        /* Comic Sans, flat layout, zero rounding, clean dark forest and sage green theme */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,7 +15,7 @@
         }
 
         body {
-            background-color: #dbf3e4; /* Mint green base background */
+            background-color: #1e3d2f; /* Deep forest green base background */
             color: black;
             padding: 20px;
             min-height: 100vh;
@@ -37,7 +37,7 @@
             align-items: center;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #dbf3e4;
+            background: #1e3d2f;
             z-index: 100;
         }
         #auth-screen.active {
@@ -45,11 +45,10 @@
         }
 
         .auth-box {
-            border: 3px solid black;
+            border: 2px solid black;
             padding: 30px;
-            background: white;
+            background: #e8efe9; /* Very light sage green for panels */
             width: 360px;
-            box-shadow: 6px 6px 0px black;
         }
 
         .auth-toggle-link {
@@ -79,6 +78,7 @@
             color: black;
         }
 
+        /* Completely flat button style with no 3D shadow or offset transforms */
         button {
             padding: 8px 16px;
             border: 2px solid black;
@@ -86,14 +86,11 @@
             color: black;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 3px 3px 0px black;
         }
 
         button:hover {
             background: black;
             color: white;
-            box-shadow: none;
-            transform: translate(3px, 3px);
         }
 
         /* Top Bar Header */
@@ -101,11 +98,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 3px solid black;
+            border: 2px solid black;
             padding: 15px;
             margin-bottom: 20px;
-            background: white;
-            box-shadow: 6px 6px 0px black;
+            background: #e8efe9;
         }
 
         /* Wide text-based interactive logo with no border outline */
@@ -144,21 +140,19 @@
 
         .sidebar {
             flex: 1;
-            border: 3px solid black;
+            border: 2px solid black;
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: white;
-            box-shadow: 6px 6px 0px black;
+            background: #e8efe9;
         }
 
         /* Sub-Pages Window Containers */
         .sub-page {
-            border: 3px solid black;
+            border: 2px solid black;
             padding: 20px;
-            background: white;
-            box-shadow: 6px 6px 0px black;
+            background: #e8efe9;
         }
 
         /* Avatar Layout Box */
@@ -212,22 +206,20 @@
             margin-bottom: 10px;
             text-align: center;
             width: 120px;
-            background: #fdfdfd;
+            background: white;
         }
 
-        /* Game Elements */
+        /* Game Elements - Flat style matching button behavior */
         .game-item {
             border: 2px solid black;
             padding: 15px;
             width: 180px;
             cursor: pointer;
             text-align: center;
-            background: #fdfdfd;
-            box-shadow: 4px 4px 0px black;
+            background: white;
         }
         .game-item:hover {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0px black;
+            background: #a3b899; /* Olive green highlight on hover */
         }
 
         .game-icon-img {
@@ -259,10 +251,10 @@
             padding: 5px;
             margin-bottom: 8px;
             cursor: pointer;
-            background: #fafafa;
+            background: white;
         }
         .friend-li:hover {
-            background: #dbf3e4;
+            background: #a3b899;
         }
 
         /* Friend Request Item Style */
@@ -277,7 +269,6 @@
         .request-item button {
             padding: 2px 6px;
             font-size: 12px;
-            box-shadow: 1px 1px 0px black;
         }
 
         /* Small Error Warning Text */
@@ -321,7 +312,7 @@
             <div id="register-error" class="error-message">Error container</div>
 
             <label>Username:</label>
-            <input type="text" id="auth-username" placeholder="Enter Username (e.g. Mauro)">
+            <input type="text" id="auth-username" placeholder="Enter Username">
             
             <label>Email:</label>
             <input type="email" id="auth-email" placeholder="Enter Email">
@@ -520,16 +511,7 @@
         let equippedItems = { hat: "", shirt: "", pants: "" };
         let currentlyViewingProfile = ""; 
 
-        // Existing Simulated Registered Accounts
-        let globalAccountsDatabase = {
-            "mauro": { email: "mauro@mail.com", password: "123" },
-            "shipbloxxer": { email: "ship@mail.com", password: "123" },
-            "friend1": { email: "friend1@mail.com", password: "123" },
-            "noobmaster": { email: "noob@mail.com", password: "123" },
-            "guest404": { email: "ghost@mail.com", password: "123" }
-        };
-
-        // Database holding profile configurations for your friends display values
+        // Simulated data for pre-existing profiles display configs
         let profilesDatabase = {
             "Friend1": { color: "blue", bio: "I like coding flat layouts.", hat: "Hat1", shirt: "", pants: "" },
             "NoobMaster": { color: "red", bio: "Beaten every game on this hub.", hat: "Hat1", shirt: "", pants: "" },
@@ -553,7 +535,7 @@
             }
         }
 
-        // Dedicated Login View logic handler
+        // Open login handler - Database check bypassed! Logs in any username immediately.
         function loginUser() {
             const userInput = document.getElementById('login-username').value.trim();
             const passInput = document.getElementById('login-password').value;
@@ -567,21 +549,14 @@
                 return;
             }
 
-            const lowerUser = userInput.toLowerCase();
-
-            if (globalAccountsDatabase.hasOwnProperty(lowerUser) && globalAccountsDatabase[lowerUser].password === passInput) {
-                myUsername = userInput;
-                launchDashboard();
-            } else {
-                errorDiv.textContent = "Invalid username or password!";
-                errorDiv.style.display = "block";
-            }
+            myUsername = userInput;
+            launchDashboard();
         }
 
-        // Dedicated Registration logic handler
+        // Open registration handler - Database bypass enabled.
         function signUpUser() {
             const usernameInput = document.getElementById('auth-username').value.trim();
-            const emailInput = document.getElementById('auth-email').value.trim().toLowerCase();
+            const emailInput = document.getElementById('auth-email').value.trim();
             const passwordInput = document.getElementById('auth-password').value;
             const errorDiv = document.getElementById('register-error');
 
@@ -593,35 +568,13 @@
                 return;
             }
 
-            const lowerUsername = usernameInput.toLowerCase();
-
-            if (globalAccountsDatabase.hasOwnProperty(lowerUsername)) {
-                errorDiv.textContent = `The username "${usernameInput}" is already taken!`;
-                errorDiv.style.display = "block";
-                return;
-            }
-
-            for (let user in globalAccountsDatabase) {
-                if (globalAccountsDatabase[user].email === emailInput) {
-                    errorDiv.textContent = "This email is already linked to another account!";
-                    errorDiv.style.display = "block";
-                    return;
-                }
-            }
-
-            // Save credentials inside database runtime map
-            globalAccountsDatabase[lowerUsername] = { email: emailInput, password: passwordInput };
-
             myUsername = usernameInput;
             launchDashboard();
         }
 
         function checkForSpecialBadges(userToCheck) {
             const isShipbloxxer = (userToCheck.toLowerCase() === "shipbloxxer");
-            
-            // Adjust top layout banner elements visibility toggles
             document.getElementById('header-badge').style.display = isShipbloxxer ? "inline-block" : "none";
-            
             return isShipbloxxer;
         }
 
@@ -643,7 +596,7 @@
             document.getElementById('home-screen').classList.add('active');
             showSubPage('feed-view');
 
-            // Clear data inputs
+            // Clear inputs
             document.getElementById('login-username').value = "";
             document.getElementById('login-password').value = "";
             document.getElementById('auth-username').value = "";
@@ -703,7 +656,6 @@
             document.getElementById('profile-username-display').style.color = myColor;
             document.getElementById('profile-bio-display').textContent = myBio;
             
-            // Check verification values for profile views
             document.getElementById('profile-badge').style.display = checkForSpecialBadges(myUsername) ? "inline-block" : "none";
             
             setProfileAvatarGraphics(equippedItems.hat, equippedItems.shirt, equippedItems.pants);
@@ -722,7 +674,6 @@
             document.getElementById('profile-username-display').style.color = data.color;
             document.getElementById('profile-bio-display').textContent = data.bio;
 
-            // Check if foreign profile target requires verification badge attachment elements inline
             document.getElementById('profile-badge').style.display = (username.toLowerCase() === "shipbloxxer") ? "inline-block" : "none";
 
             setProfileAvatarGraphics(data.hat, data.shirt, data.pants);
