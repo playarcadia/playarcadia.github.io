@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arcade Site</title>
     <style>
-        /* Comic Sans, flat layout, zero rounding, no decorative colors */
+        /* Comic Sans, flat layout, zero rounding, clean arcade mint green theme */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -15,7 +15,7 @@
         }
 
         body {
-            background-color: white;
+            background-color: #dbf3e4; /* Mint green base background */
             color: black;
             padding: 20px;
             min-height: 100vh;
@@ -37,7 +37,7 @@
             align-items: center;
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: white;
+            background: #dbf3e4;
             z-index: 100;
         }
         #auth-screen.active {
@@ -49,6 +49,7 @@
             padding: 30px;
             background: white;
             width: 360px;
+            box-shadow: 6px 6px 0px black;
         }
 
         .auth-toggle-link {
@@ -85,11 +86,14 @@
             color: black;
             cursor: pointer;
             font-weight: bold;
+            box-shadow: 3px 3px 0px black;
         }
 
         button:hover {
             background: black;
             color: white;
+            box-shadow: none;
+            transform: translate(3px, 3px);
         }
 
         /* Top Bar Header */
@@ -97,22 +101,35 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 2px solid black;
-            padding: 10px;
+            border: 3px solid black;
+            padding: 15px;
             margin-bottom: 20px;
+            background: white;
+            box-shadow: 6px 6px 0px black;
         }
 
-        /* Wide text-based logo style with no border outline */
+        /* Wide text-based interactive logo with no border outline */
         .logo {
             width: 250px;
             height: auto;
             display: block;
             object-fit: contain;
+            cursor: pointer;
         }
 
         .nav-buttons {
             display: flex;
             gap: 10px;
+        }
+
+        /* Badges styling next to user names */
+        .user-badge {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 5px;
+            object-fit: contain;
         }
 
         /* Main Grid Layout */
@@ -127,18 +144,21 @@
 
         .sidebar {
             flex: 1;
-            border: 2px solid black;
+            border: 3px solid black;
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 20px;
+            background: white;
+            box-shadow: 6px 6px 0px black;
         }
 
-        /* Sub-Pages */
+        /* Sub-Pages Window Containers */
         .sub-page {
-            border: 2px solid black;
+            border: 3px solid black;
             padding: 20px;
             background: white;
+            box-shadow: 6px 6px 0px black;
         }
 
         /* Avatar Layout Box */
@@ -192,6 +212,7 @@
             margin-bottom: 10px;
             text-align: center;
             width: 120px;
+            background: #fdfdfd;
         }
 
         /* Game Elements */
@@ -201,6 +222,12 @@
             width: 180px;
             cursor: pointer;
             text-align: center;
+            background: #fdfdfd;
+            box-shadow: 4px 4px 0px black;
+        }
+        .game-item:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px black;
         }
 
         .game-icon-img {
@@ -228,13 +255,14 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 1px solid black;
+            border: 2px solid black;
             padding: 5px;
             margin-bottom: 8px;
             cursor: pointer;
+            background: #fafafa;
         }
         .friend-li:hover {
-            background: #f0f0f0;
+            background: #dbf3e4;
         }
 
         /* Friend Request Item Style */
@@ -249,6 +277,7 @@
         .request-item button {
             padding: 2px 6px;
             font-size: 12px;
+            box-shadow: 1px 1px 0px black;
         }
 
         /* Small Error Warning Text */
@@ -310,19 +339,21 @@
     <div id="home-screen" class="screen">
         <header>
             <div style="display: flex; align-items: center; gap: 20px;">
-                <img src="logo.png" alt="logo.png" class="logo">
+                <img src="logo.png" alt="Arcadia" class="logo" onclick="showSubPage('feed-view')">
                 <div>
-                    <span id="welcome-user" style="font-weight: bold; font-size: 20px;">Username</span>
-                    <br>
+                    <div>
+                        <span id="welcome-user" style="font-weight: bold; font-size: 20px;">Username</span>
+                        <img id="header-badge" src="badge.png" alt="badge" class="user-badge" style="display: none;">
+                    </div>
                     <span id="points-display" style="font-weight: bold; color: green;">Points: 1000</span>
                 </div>
             </div>
 
             <div class="nav-buttons">
-                <button onclick="showSubPage('feed-view')">Home Feed</button>
-                <button onclick="showSubPage('avatar-view')">Character Designer</button>
-                <button onclick="viewOwnProfile()">My Profile</button>
-                <button onclick="logoutUser()">Log Out</button>
+                <button onclick="showSubPage('feed-view')">Games</button>
+                <button onclick="showSubPage('avatar-view')">Character</button>
+                <button onclick="viewOwnProfile()">Profile</button>
+                <button onclick="showSubPage('settings-view')">Settings</button>
             </div>
         </header>
 
@@ -330,11 +361,13 @@
             <div class="main-content">
                 
                 <div id="feed-view" class="sub-page-container">
-                    <h3>Games</h3>
-                    <br>
-                    <div class="game-item" onclick="showSubPage('game-detail-view')">
-                        <img src="Icon1.png" alt="Icon1.png" class="game-icon-img">
-                        <h4>Test Place</h4>
+                    <div class="sub-page">
+                        <h3>Games</h3>
+                        <br>
+                        <div class="game-item" onclick="showSubPage('game-detail-view')">
+                            <img src="Icon1.png" alt="Icon1.png" class="game-icon-img">
+                            <h4>Test Place</h4>
+                        </div>
                     </div>
                 </div>
 
@@ -375,7 +408,7 @@
 
                 <div id="profile-view" class="sub-page-container" style="display: none;">
                     <div class="sub-page">
-                        <h2 id="profile-page-title">My Public Profile</h2>
+                        <h2 id="profile-page-title">Public Profile</h2>
                         <br>
                         
                         <div style="display: flex; gap: 30px; align-items: flex-start;">
@@ -387,7 +420,10 @@
                             </div>
                             
                             <div style="flex: 1;">
-                                <h1 id="profile-username-display">Username</h1>
+                                <div style="display: flex; align-items: center;">
+                                    <h1 id="profile-username-display">Username</h1>
+                                    <img id="profile-badge" src="badge.png" alt="badge" class="user-badge" style="display: none;">
+                                </div>
                                 <p id="profile-bio-display" style="border: 1px dashed black; padding: 10px; margin: 15px 0; min-height: 50px;">No bio written yet...</p>
                                 
                                 <button id="unfriend-btn" style="display: none; border: 2px solid red; color: red;" onclick="unfriendCurrentProfile()">Unfriend Player</button>
@@ -396,7 +432,7 @@
                         
                         <div id="profile-edit-block">
                             <br><hr><br>
-                            <h3>Edit Settings</h3>
+                            <h3>Edit Profile Display</h3>
                             <br>
                             <label>Edit Bio:</label>
                             <textarea id="edit-bio-input" placeholder="Write something about yourself..."></textarea>
@@ -417,7 +453,7 @@
 
                 <div id="game-detail-view" class="sub-page-container" style="display: none;">
                     <div class="sub-page">
-                        <button onclick="showSubPage('feed-view')">← Back to Home</button>
+                        <button onclick="showSubPage('feed-view')">← Back to Games</button>
                         <br><br>
                         <h2>Test Place</h2>
                         <br>
@@ -425,6 +461,16 @@
                         <p>This is the description text for Test Place page view.</p>
                         <br>
                         <button style="font-size: 24px; padding: 10px 30px;">PLAY</button>
+                    </div>
+                </div>
+
+                <div id="settings-view" class="sub-page-container" style="display: none;">
+                    <div class="sub-page">
+                        <h2>Settings</h2>
+                        <br>
+                        <p style="color: gray; margin-bottom: 20px;">System configuration panels and account safety utilities.</p>
+                        
+                        <button style="border-color: red; color: red;" onclick="logoutUser()">Log Out</button>
                     </div>
                 </div>
 
@@ -477,6 +523,7 @@
         // Existing Simulated Registered Accounts
         let globalAccountsDatabase = {
             "mauro": { email: "mauro@mail.com", password: "123" },
+            "shipbloxxer": { email: "ship@mail.com", password: "123" },
             "friend1": { email: "friend1@mail.com", password: "123" },
             "noobmaster": { email: "noob@mail.com", password: "123" },
             "guest404": { email: "ghost@mail.com", password: "123" }
@@ -522,9 +569,7 @@
 
             const lowerUser = userInput.toLowerCase();
 
-            // Check if profile exists and password matches
             if (globalAccountsDatabase.hasOwnProperty(lowerUser) && globalAccountsDatabase[lowerUser].password === passInput) {
-                // Match visual case with existing record if possible, else keep entry casing
                 myUsername = userInput;
                 launchDashboard();
             } else {
@@ -571,6 +616,15 @@
             launchDashboard();
         }
 
+        function checkForSpecialBadges(userToCheck) {
+            const isShipbloxxer = (userToCheck.toLowerCase() === "shipbloxxer");
+            
+            // Adjust top layout banner elements visibility toggles
+            document.getElementById('header-badge').style.display = isShipbloxxer ? "inline-block" : "none";
+            
+            return isShipbloxxer;
+        }
+
         function launchDashboard() {
             playerPoints = 1000;
             ownedItems = [];
@@ -580,6 +634,8 @@
 
             document.getElementById('welcome-user').textContent = myUsername;
             document.getElementById('welcome-user').style.color = myColor;
+            
+            checkForSpecialBadges(myUsername);
             updatePointsDisplay();
             renderFriendsSidebar();
 
@@ -602,7 +658,7 @@
         }
 
         function showSubPage(pageId) {
-            const pages = ['feed-view', 'avatar-view', 'profile-view', 'game-detail-view'];
+            const pages = ['feed-view', 'avatar-view', 'profile-view', 'game-detail-view', 'settings-view'];
             pages.forEach(id => {
                 document.getElementById(id).style.display = (id === pageId) ? 'block' : 'none';
             });
@@ -618,6 +674,7 @@
 
             activeFriendsList.forEach(name => {
                 let data = profilesDatabase[name] || { color: "black", hat: "", shirt: "", pants: "" };
+                let isFriendSpecial = (name.toLowerCase() === "shipbloxxer");
 
                 const row = document.createElement('div');
                 row.className = "friend-li";
@@ -630,7 +687,10 @@
                         <img src="${data.shirt ? data.shirt + '.png' : ''}" class="avatar-layer" style="display:${data.shirt ? 'block' : 'none'}">
                         <img src="${data.pants ? data.pants + '.png' : ''}" class="avatar-layer" style="display:${data.pants ? 'block' : 'none'}">
                     </div>
-                    <span style="color: ${data.color}; font-weight: bold;">${name}</span>
+                    <span style="color: ${data.color}; font-weight: bold;">
+                        ${name}
+                        ${isFriendSpecial ? '<img src="badge.png" class="user-badge">' : ''}
+                    </span>
                 `;
                 container.appendChild(row);
             });
@@ -642,6 +702,9 @@
             document.getElementById('profile-username-display').textContent = myUsername;
             document.getElementById('profile-username-display').style.color = myColor;
             document.getElementById('profile-bio-display').textContent = myBio;
+            
+            // Check verification values for profile views
+            document.getElementById('profile-badge').style.display = checkForSpecialBadges(myUsername) ? "inline-block" : "none";
             
             setProfileAvatarGraphics(equippedItems.hat, equippedItems.shirt, equippedItems.pants);
 
@@ -658,6 +721,9 @@
             document.getElementById('profile-username-display').textContent = username;
             document.getElementById('profile-username-display').style.color = data.color;
             document.getElementById('profile-bio-display').textContent = data.bio;
+
+            // Check if foreign profile target requires verification badge attachment elements inline
+            document.getElementById('profile-badge').style.display = (username.toLowerCase() === "shipbloxxer") ? "inline-block" : "none";
 
             setProfileAvatarGraphics(data.hat, data.shirt, data.pants);
 
